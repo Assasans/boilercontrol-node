@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>{{title}}</title>
+    <title>{{error.status}} {{error.message}}</title>
+    <link rel='stylesheet' href='/stylesheets/fonts.css' />
+    <link rel='stylesheet' href='/stylesheets/common.css' />
     <link rel='stylesheet' href='/stylesheets/error.css' />
   </head>
   <body>
-    <h1>{{message}}</h1>
-		<h2>{{error.status}}</h2>
-		<pre class="stack">{{error.stack}}</pre>
+    <div class="error">
+      <div class="align-center"><a class="message">{{error.status}} {{error.message}}</a></div><br />
+      <a class="path">Requested URL: <a class="url">{{request.path}}</a></a><br />
+      <pre class="stack">{{error.stack}}</pre>
+    </div>
   </body>
 </html>
