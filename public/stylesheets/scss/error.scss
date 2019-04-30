@@ -3,12 +3,31 @@ body {
 }
 
 div.error {
-	a.message {
+	border: 0.25em solid green;
 
+	a.message {
+		color: #f00202;
+		font-family: 'Nunito', 'Arial Narrow', Arial, Helvetica, sans-serif;
+		font-size: 200%;
+		font-weight: bold;
+	}
+
+	a.path {
+		color: #550000;
+		font-family: 'Roboto', monospace;
+		font-size: 150%;
+	}
+
+	.url {
+		color: #700000;
+		font-family: 'Roboto Mono', monospace;
+		font-size: 150%;
+		font-weight: bold;
 	}
 
 	pre.stack {
 		color: #f00202;
-		font-family: 'Source Sans Pro', 'Arial Narrow', Arial, Helvetica, sans-serif;
+		font-family: 'Source Code Pro', monospace;
+		font-size: 85%;
 	}
 }
