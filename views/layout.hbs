@@ -1,10 +1,320 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <a>{{{body}}}</a>
-  </body>
+	<head>
+		<title>Boiler control</title>
+
+		<link rel='stylesheet' href='/stylesheets/fonts.css' />
+    <link rel='stylesheet' href='/stylesheets/common.css' />
+		<link rel='stylesheet' href='/stylesheets/style.css' />
+
+		<!-- jQuery 3.4.0 -->
+		<script src="http://code.jquery.com/jquery-3.4.0.min.js"
+			integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+			crossorigin="anonymous"></script>
+
+		<!-- WebSocket client -->
+		{{> websocket}}
+
+		<!-- CanvasJS -->
+		<script src="/deps/canvasjs-2.3.1/jquery.canvasjs.min.js"></script>
+
+		<!-- Moment.JS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
+			integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ="
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/locale/ru.js"></script>
+
+		<!-- MDL -->
+		<link rel="stylesheet" href="/deps/mdl/material.min.css" />
+		<script src="/deps/mdl/material.min.js"></script>
+
+		<!-- Fonts -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	</head>
+	<body>
+		<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+			<style>
+				.mdl-layout__header-row {
+					padding: 0 30px;
+				}
+			</style>
+			<header class="mdl-layout__header">
+				<div class="mdl-layout__header-row">
+					<span class="mdl-layout-title">Boiler control</span>
+					<div class="mdl-layout-spacer"></div>
+					<nav class="mdl-navigation">
+						<a class="mdl-navigation__link header-link" href="">Link</a>
+						{{#if logged}}
+							<a class="mdl-navigation__link header-link header-link-account" href="">Аккаунт</a>
+							<a class="mdl-navigation__link header-link" href="">Выход</a>
+						{{else}}
+							<a class="mdl-navigation__link header-link" href="">Вход</a>
+						{{/if}}
+					</nav>
+				</div>
+
+				<div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+					<a href="#scroll-tab-1" class="mdl-layout__tab is-active">Tab 1</a>
+					<a href="#tab-gas" class="mdl-layout__tab">Газ</a>
+					<a href="#tab-water" class="mdl-layout__tab">Вода</a>
+					<a href="#tab-floor" class="mdl-layout__tab">Пол</a>
+				</div>
+			</header>
+			<main class="mdl-layout__content">
+				<div class="page-content">
+					{{{body}}}
+					<div class="tab-content">
+						<section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+						</section>
+						<section class="mdl-layout__tab-panel" id="tab-gas">
+						</section>
+						<section class="mdl-layout__tab-panel" id="tab-water">
+						</section>
+						<section class="mdl-layout__tab-panel" id="tab-floor">
+						</section>
+					</div>
+					<!--<div class="chart">
+						<div class="align-center"><a class="chart-title">Температура газа</a></div><br /><br />
+						<div id="chart-gas"></div>
+						<div id="chart-gas-after">
+							<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+								Button
+							</button>
+						</div>
+					</div><br />-->
+					<script>
+					moment.locale('ru');
+
+					function openFullscreen(element) {
+						if(element.requestFullscreen) element.requestFullscreen();
+						else if(element.mozRequestFullScreen) element.mozRequestFullScreen();
+						else if(element.webkitRequestFullscreen) element.webkitRequestFullscreen();
+						else if(element.msRequestFullscreen) element.msRequestFullscreen();
+					}
+
+					/* Close fullscreen */
+					function closeFullscreen() {
+						if(document.exitFullscreen) document.exitFullscreen();
+						else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+						else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+						else if(document.msExitFullscreen) document.msExitFullscreen();
+					}
+
+					var config = [
+						{
+							name: 'gas',
+							tabElement: $('#tab-gas')[0],
+							chartElement: 'chart-gas',
+							afterElement: 'chart-gas-after',
+
+							title: 'Температура газа',
+							updateInterval: 10000,
+							series: {
+								input: "Вход",
+								output: "Выход"
+							}
+						}
+					];
+
+					createChart(config[0]);
+
+					function createChart(config) {
+						var chartRootDiv = $('<div></div>');
+						chartRootDiv.addClass('chart');
+
+						var titleDiv = $('<div></div>');
+						titleDiv.addClass('align-center');
+
+						var chartTitle = $('<a></a>');
+						chartTitle.addClass('chart-title');
+						chartTitle.text(config.title);
+						chartTitle.appendTo(titleDiv);
+
+						titleDiv.appendTo(chartRootDiv);
+						$('<br /><br />').appendTo(chartRootDiv);
+
+						var chartDiv = $('<div></div>');
+						chartDiv.attr('id', config.chartElement);
+						chartDiv.appendTo(chartRootDiv);
+
+						var chartAfterDiv = $('<div></div>');
+						chartAfterDiv.attr('id', config.afterElement);
+						chartAfterDiv.appendTo(chartRootDiv);
+
+						const _fullscreen_on_text = "Включить полноэкранный режим";
+						const _fullscreen_off_text = "Выключить полноэкранный режим";
+						var fullscreenButton = $('<button></button>');
+						fullscreenButton.addClass('button-half-width mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent');
+						fullscreenButton.text(_fullscreen_on_text);
+						var fullscreen = false;
+						const default_height = 500;
+						const default_fontSize = 14;
+						fullscreenButton.on('click', function() {
+							var height, fontSize;
+							if(!fullscreen) {
+								openFullscreen($(chartRootDiv)[0]);
+								fullscreenButton.text(_fullscreen_off_text);
+								height = $(document).height() - 64;
+								fontSize = 20;
+							} else {
+								height = default_height;
+								fontSize = default_fontSize;
+								closeFullscreen();
+								fullscreenButton.text(_fullscreen_on_text);
+							}
+							console.log(height);
+							chart.options.height = height;
+							chart.options.toolTip.fontSize = fontSize;
+							chart.updateAfterDiv(height);
+
+							fullscreen = !fullscreen;
+						});
+						$(document).bind('webkitfullscreenchange mozfullscreenchange fullscreenchange', function(e) {
+							var state = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+							var event = state ? true : false;
+
+							if(!event) { //If exiting from fullscreen mode
+								fullscreen = false;
+								chart.options.height = default_height;
+								chart.options.toolTip.fontSize = default_fontSize;
+								fullscreenButton.text(_fullscreen_on_text);
+								chart.updateAfterDiv(default_height);
+							}
+						});
+						fullscreenButton.appendTo(chartRootDiv);
+
+						//Append to tab
+						chartRootDiv.appendTo(config.tabElement);
+
+						var initConfig = config;
+						initConfig.chartElement = $('#' + config.chartElement)[0];
+						initConfig.afterElement = $('#' + config.afterElement)[0];
+
+						var chart = initChart(initConfig);
+					}
+
+					function formatTime(unix_time, format) {
+						var timestamp = moment(unix_time);
+						var time = timestamp.format(format);
+						time += `:${timestamp.milliseconds()}`; //TODO Milliseconds only for debug
+
+						return time;
+					}
+
+					function initChart(config) {
+						var dataIn = [];
+						var dataOut = [];
+						
+						window.chart = new CanvasJS.Chart(config.chartElement, {
+							exportEnabled: true,
+							height: 500,
+							toolTip: {
+								fontFamily: '',
+								fontColor: '#000000',
+								fontSize: 14,
+								borderColor: '#2e7d32',
+								shared: true,
+								contentFormatter: function(event) {
+									var unix_time = event.entries[0].dataPoint.x;
+									//var unix_time = moment().valueOf();
+									var time = formatTime(unix_time, 'DD/MM/YYYY HH:mm:ss');
+
+									var input = (event.entries[0].dataPoint.y).toFixed(2);
+									var output = (event.entries[1].dataPoint.y).toFixed(2);
+            			return `${time}<br />${config.series.input}: ${input} °C<br />${config.series.output}: ${output} °C`;  
+								}  
+							},
+							axisX: {
+								labelFormatter: function(event) {
+									var result = formatTime(event.value, 'HH:mm:ss')
+									return result;
+								}
+							},
+							axisY: {
+								includeZero: false,
+								labelFormatter: function(event) {
+									var result = (event.value).toFixed(2)
+									result += ' °C';
+									return result;
+								}
+							},
+							data: [
+								{
+									type: "spline",
+									name: config.series.input,
+									markerSize: 0,
+									lineColor: '#f44336',
+									markerColor: '#c62828',
+									dataPoints: dataIn
+								},
+								{
+									type: "spline",
+									name: config.series.output,
+									markerSize: 0,
+									lineColor: '#3f51b5',
+									markerColor: '#283593',
+									dataPoints: dataOut
+								}
+							]
+						});
+						
+						var x = 1;
+						var lastIn = 50;
+						var lastOut = lastIn - 15;
+						var dataLength = 150;
+						chart.updateTimer = setInterval(function() {
+							lastIn += Math.round(Math.random() * 4) * Math.sign((Math.random() * -2) + 1);
+							lastOut += Math.round(Math.random() * 3) * Math.sign((Math.random() * -2) + 1);
+
+							while(lastOut > lastIn - 2) {
+								lastOut += Math.round(Math.random() * 3) * Math.sign((Math.random() * -2) + 1);
+							}
+
+							dataIn.push({
+								x: x,
+								y: lastIn
+							});
+							dataOut.push({
+								x: x,
+								y: lastOut
+							});
+
+							if(dataIn.length > dataLength) dataIn.shift();
+							if(dataOut.length > dataLength) dataOut.shift();
+
+							x++;
+
+							chart.render();
+						}, config.updateInterval);
+
+						$(config.tabElement).on('click', function() {
+							setTimeout(function() {
+								chart.render();
+							}, 25)
+						});
+
+						chart.updateAfterDiv = function(height) {
+							console.log('Height: ', height);
+							$(config.afterElement).css('paddingTop', height + 16);
+						};
+						var height = $(config.chartElement)[0].children[0].children[0].height;
+						chart.updateAfterDiv(height);
+
+						return chart;
+					}
+					</script>
+
+					<!-- Accent-colored raised button with ripple -->
+					<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+						Button
+					</button>
+
+					<!-- Colored FAB button -->
+					<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+						<i class="material-icons">add</i>
+					</button>
+				</div>
+			</main>
+		</div>
+	</body>
 </html>
