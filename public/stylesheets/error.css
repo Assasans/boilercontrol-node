@@ -1,6 +1,27 @@
+div.error {
+  border: 0.25em solid green;
+}
+div.error a.message {
+  color: #f00202;
+  font-family: "Nunito", "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-size: 200%;
+  font-weight: bold;
+}
+div.error a.path {
+  color: #550000;
+  font-family: "Roboto", monospace;
+  font-size: 150%;
+}
+div.error .url {
+  color: #700000;
+  font-family: "Roboto Mono", monospace;
+  font-size: 150%;
+  font-weight: bold;
+}
 div.error pre.stack {
   color: #f00202;
-  font-family: "Source Sans Pro", "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-family: "Source Code Pro", monospace;
+  font-size: 85%;
 }
 
 /*# sourceMappingURL=error.css.map */
