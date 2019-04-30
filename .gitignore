@@ -1,6 +1,9 @@
 # JS / CSS Dependencies
 public/deps/
 
+public/stylesheets/*
+!public/stylesheets/scss
+
 # Logs
 logs
 *.log
