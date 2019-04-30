@@ -1,3 +1,6 @@
+# JS / CSS Dependencies
+public/deps/
+
 # Logs
 logs
 *.log
