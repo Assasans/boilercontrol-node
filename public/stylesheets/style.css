@@ -1,8 +1,54 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+/* Header */
+.header-link {
+  font-family: "Exo 2", Helvetica, Arial, sans-serif;
+}
+.header-link .header-link-account {
+  color: red;
+}
 
-a {
-  color: #00B7FF; }
+/* Body */
+.page-content {
+  font-family: "Oswald", Helvetica, Arial, sans-serif;
+  padding: 1em;
+}
+
+.chart {
+  background-color: #ffffff;
+  padding-top: 1em;
+  text-align: center;
+  /* Chartist series color */
+}
+.chart a.chart-title {
+  margin: 0 auto;
+  font-family: "Exo 2", Helvetica, Arial, sans-serif;
+  font-size: 200%;
+  color: #000000;
+}
+.chart .series-input {
+  stroke: #f44336;
+}
+.chart .series-input .ct-line {
+  stroke-width: 2px;
+}
+.chart .series-input .ct-point {
+  stroke-width: 7px;
+  stroke-linecap: round;
+}
+.chart .series-input .ct-label {
+  font-family: "Exo 2", Helvetica, Arial, sans-serif;
+  font-size: 100%;
+  color: #b71c1c;
+  stroke: unset;
+}
+.chart .series-output {
+  stroke: #3f51b5;
+}
+.chart .series-output .ct-line {
+  stroke-width: 2px;
+}
+.chart .series-output .ct-point {
+  stroke-width: 7px;
+  stroke-linecap: round;
+}
 
 /*# sourceMappingURL=style.css.map */

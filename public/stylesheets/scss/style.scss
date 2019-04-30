@@ -1,0 +1,61 @@
+/* Header */
+.header-link {
+  font-family: 'Exo 2', Helvetica, Arial, sans-serif;
+
+  .header-link-account {
+    color: red;
+  }
+}
+
+/* Body */
+.page-content {
+  font-family: 'Oswald', Helvetica, Arial, sans-serif;
+  padding: 1em;
+}
+
+.tab-content {
+}
+
+.chart {
+  background-color: #ffffff;
+  padding-top: 1em;
+  text-align: center;
+
+  a.chart-title {
+    margin: 0 auto;
+    font-family: 'Exo 2', Helvetica, Arial, sans-serif;
+    font-size: 200%;
+    color: #000000;
+  }
+
+  /* Chartist series color */
+  .series-input {
+    stroke: #f44336;
+
+    .ct-line {
+      stroke-width: 2px;
+    }
+    .ct-point {
+      stroke-width: 7px;
+      stroke-linecap: round;
+    }
+    .ct-label {
+      font-family: 'Exo 2', Helvetica, Arial, sans-serif;
+      font-size: 100%;
+      color: #b71c1c;
+      stroke: unset;
+    }
+  }
+
+  .series-output {
+    stroke: #3f51b5;
+
+    .ct-line {
+      stroke-width: 2px;
+    }
+    .ct-point {
+      stroke-width: 7px;
+      stroke-linecap: round;
+    }
+  }
+}

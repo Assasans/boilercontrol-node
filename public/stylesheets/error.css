@@ -1,5 +1,6 @@
-pre.stack {
+div.error pre.stack {
   color: #f00202;
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; }
+  font-family: "Source Sans Pro", "Arial Narrow", Arial, Helvetica, sans-serif;
+}
 
 /*# sourceMappingURL=error.css.map */

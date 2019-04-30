@@ -1,9 +1,1 @@
-{
-	"version": 3,
-	"file": "error.css",
-	"sources": [
-		"error.scss"
-	],
-	"names": [],
-	"mappings": "AAIA,AAAA,GAAG,AAAA,MAAM,CAAC;EACT,KAAK,EAAE,OAAO;EACd,WAAW,EAAE,2DAA2D,GACxE"
-}
+{"version":3,"sourceRoot":"","sources":["scss/error.scss"],"names":[],"mappings":"AASC;EACC;EACA","file":"error.css"}
