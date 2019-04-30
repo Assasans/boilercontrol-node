@@ -162,15 +162,16 @@ module.exports.API = function() {
 			if(error) {
 				app.utils.log(
 					sprintf(
-						"%s\n%s %s\n%s %s\n%s %s",
-						chalk.red.bold("Cannot connect!"),
+						"%s\n  %s %s\n  %s %s\n  %s %s\n  %s %s\n  %s",
+						chalk.red.bold("Cannot connect to MySQL!"),
 						chalk.red("Error code:"), chalk.keyword('orange').bold(error.errno),
 						chalk.red("Error name:"), chalk.keyword('orange').bold(error.name),
 						chalk.red("Error message:"), chalk.keyword('orange').bold(error.message),
-						chalk.red("Stack trace:"), chalk.keyword('orange').bold(error.stack)
+						chalk.red("Stack trace:"), chalk.keyword('orange')(error.stack),
+						chalk.red("Interactions with DB have been disabled!")
 					),
 					moduleName,
-					app.utils.Level.ERROR
+					app.utils.Level.FATAL
 				);
 				return;
 			}
